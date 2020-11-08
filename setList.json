@@ -1,0 +1,71 @@
+{
+	"setList" : 
+	[
+		{
+			"title" : "Fallingwater",
+			"artist" : "Maggie Rogers",
+			"genre" : ["Indie", "Folk", "Pop"],
+			"year-released" : 2019
+		},
+		{
+			"title" : "ENTROPY",
+			"artist" : "Daniel Caesar",
+			"genre" : ["R&B"],
+			"year-released" : 2019
+		},
+		{
+			"title" : "Bags",
+			"artist" : "Clairo",
+			"genre" : ["Indie", "Pop"],
+			"year-released" : 2019
+		},
+		{
+			"title" : "Hide and Seek",
+			"artist" : "Imogen Heap",
+			"genre" : ["Folktronica"],
+			"year-released" : 2005
+		},
+		{
+			"title" : "Isabel's Moment",
+			"artist" : "King Princess",
+			"genre" : ["Pop"],
+			"year-released" : 2019
+		},
+		{
+			"title" : "Pink + White",
+			"artist" : "Frank Ocean",
+			"genre" : ["Alternative R&B", "Neo Soul", "Pop"],
+			"year-released" : 2016
+		},
+		{
+			"title" : "Never Ending",
+			"artist" : "Rihanna",
+			"genre" : ["Contemporary R&B", "Pop"],
+			"year-released" : 2016
+		},
+		{
+			"title" : "Mariners Apartment Complex",
+			"artist" : "Lana Del Rey",
+			"genre" : ["Alternative", "Pop"],
+			"year-released" : 2019
+		},
+		{
+			"title" : "Don't Dream It's Over",
+			"artist" : "Crowded House",
+			"genre" : ["Pop rock"],
+			"year-released" : 1986
+		},
+		{
+			"title" : "Say it",
+			"artist" : "Maggie Rogers",
+			"genre" : ["Indie", "Folk", "Pop"],
+			"year-released" : 2019
+		},
+		{
+			"title" : "Drew Barrymore",
+			"artist" : "SZA",
+			"genre" : ["Neo soul"],
+			"year-released" : 2017
+		}
+	]
+}
