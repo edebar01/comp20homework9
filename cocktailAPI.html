@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+	<title>Cocktail API</title>
+	<meta charset="utf-8"/>
+	<script>
+		function getCocktail() {
+			// Make instance of request object
+			// to make HTTP request after page is loaded
+			request = new XMLHttpRequest();
+ 
+			// Set the URL for the AJAX request to be the JSON file
+			request.open("GET", "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita", true)
+ 
+			// set up event handler/callback
+			request.onreadystatechange = function() {
+				// wait for done + success
+				if (request.readyState == 4 && request.status == 200) {
+
+					result = request.responseText;
+					recipe = JSON.parse(result);
+					
+					drinkName = recipe["drinks"][0]["strDrink"];
+					glassType = recipe["drinks"][0]["strGlass"];
+
+					ingredients = [];
+					//there are 4 ingredients, add them to array
+					for (i = 1; i < 5; i++)
+					{
+						key = "strIngredient" + parseInt(i);
+						ingredient = " " + recipe["drinks"][0][key];
+						ingredients.push(ingredient);
+					}
+
+					instructions = recipe["drinks"][0]["strInstructions"];
+
+					document.getElementById("data").innerHTML = "Cocktail: " + drinkName +
+					"<br/>" + "Glass type: " + glassType + "<br/>" + "Ingredients: " +
+					ingredients.toString() + "<br/>" + "Instructions: " + instructions;
+					
+				}
+				else if (request.readyState == 4 && request.status != 200) {
+
+					document.getElementById("data").innerHTML = "Something is wrong!  Check the logs to see where this went off the rails";
+
+				}
+
+				else if (request.readyState == 3) {
+
+					document.getElementById("data").innerHTML = "Too soon!  Try again";
+
+				}
+
+			}
+			//fire off the HTTP request
+			request.send();
+			console.log("4 - Request sent");
+		}
+	</script>
+</head>
+
+
+<body onload="getCocktail()">
+
+	<h1>Cocktail Recipe</h1>
+	<div id="data">Loading...</div>
+	<br/>
+	<div> 
+		I chose TheCocktailDB API. This API is used to retrieve recipes for all different kinds of cocktails. Depending on the options chosen in the API request, you can search for cocktails by name, ingredient, or ID, and you can also filter recipes based on category, glass type, or alcoholic vs. non-alcoholic. <br/> <br/>
+		I found documentation for this API at https://www.thecocktaildb.com/api.php, and I got the idea to use this API from this article https://medium.com/better-programming/a-curated-list-of-100-cool-and-fun-public-apis-to-inspire-your-next-project-7600ce3e9b3. <br/> <br/>
+		I wanted a recipe for margaritas, so the option I used in the API request was 's=margarita'. For academic purposes, the site allows users to use an API key of 1, which was also included in the URL for the request. <br/> <br/>
+		This API could be very useful for applications that display recipes, such as Yummly or AllRecipes. They aggregate recipes for all different kinds of food, so they probably need to pull specific data from sites such as this one that is specifically cocktail recipes. <br/> <br/>
+		This could also be useful for bartenders or restaurants. The API has a feature where you can request a random cocktail recipe. Restaurants could use that feature every day to have a daily drink special that is constantly changing.
+</body>
+</html>
