@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+<head>
+	<title>Display Set List</title>
+	<meta charset="utf-8"/>
+	<script>
+		genreOptions = new Array();
+
+		function loadFile() {
+			// Make instance of request object to make HTTP request after page is loaded
+			request = new XMLHttpRequest();
+ 
+			// Set the URL for the AJAX request to be the JSON file for the set list
+			request.open("GET", "https://edebar01.github.io/comp20homework9/setList.json", true);
+ 
+			// event handler/callback
+			request.onreadystatechange = function() {
+ 				// wait for done + success
+				if (request.readyState == 4 && request.status == 200) {
+					result = request.responseText;
+					//display raw string
+					document.getElementById("raw-string").innerHTML = result;
+					setList = JSON.parse(result);
+					//display user friendly list
+					document.getElementById("user-friendly").innerHTML = defaultListView(setList);
+					//create dropdown list to filter by genre
+					document.getElementById("dropdown").innerHTML = makeSelect();
+					//add event handler to 'filter' button
+					addClickHandler(document.getElementById("submit-filter"));
+				}
+				else if (request.readyState == 4 && request.status != 200) {
+				document.getElementById("raw-string").innerHTML = "Something is wrong!  Check the logs to see where this went off the rails";
+				}
+				else if (request.readyState == 3) {
+					document.getElementById("raw-string").innerHTML = "Too soon!  Try again";
+				}
+
+			}
+			// fire off the HTTP request
+			request.send();
+		}
+
+	function defaultListView(setList)
+	{
+		userFriendlyList = "<h2> List View: </h2>";
+		for (i = 0; i < setList["setList"].length; i++)
+		{
+			userFriendlyList += "<h3>" + setList["setList"][i]["title"] + 
+								"</h3>";
+			userFriendlyList += "Artist: " + setList["setList"][i]["artist"] + "<br/>";
+			genreStr = setList["setList"][i]["genre"].toString();
+			genreArr = genreStr.split(",");
+			userFriendlyList += "Genre: "
+			
+			//list genres separated by a comma
+			for (j = 0; j < genreArr.length; j++) {
+				userFriendlyList += genreArr[j];
+				if (j < (genreArr.length - 1))
+				{
+					userFriendlyList += ", ";
+				}
+
+				if (genreOptions.indexOf(genreArr[j]) === -1)
+				{
+					genreOptions.push(genreArr[j]);
+				}
+			}
+			userFriendlyList += "<br/>";
+			userFriendlyList += "Released " + setList["setList"][i]["year-released"];
+		}
+
+		return userFriendlyList;
+	}
+
+	//create dropdown list for genre types after JSON is retrieved
+	function makeSelect()
+	{
+		var s = "<select name='genreList' id='genre-list' size='1'>";
+		s += "<option>" + "No filter" + "</option>";
+		for (k=0; k < genreOptions.length; k++)
+		{
+			s += "<option>" + genreOptions[k] + "</option>";
+		}
+		s+= "</select>";
+		
+		return s;	
+	}
+
+	//event handler to filter list view based on genre
+	function addClickHandler(button) {
+    button.addEventListener('click', function() {
+    	selectElement = document.getElementById("genre-list");
+    	//0th index is the 'no filter' option, subtract one to get 
+    	//correct index for genre
+        genreIndex = selectElement.selectedIndex - 1;
+        chosenGenre = genreOptions[genreIndex];
+       	setListRawString = document.getElementById("raw-string").innerHTML;
+       	setList = JSON.parse(setListRawString);
+
+       	//reset to default list view if 'no filter' selected
+       	if (genreIndex === -1) {
+        	document.getElementById("user-friendly").innerHTML = defaultListView(setList);
+        	return;
+        }
+
+       	userFriendlyList = "<h2> List View: </h2>";
+		for (i = 0; i < setList["setList"].length; i++)
+		{
+			genreStr = setList["setList"][i]["genre"].toString();
+			genreArr = genreStr.split(",");
+			include = false;
+			genreArr.forEach(function(genre) {
+				//get rid of special character to compare strings for equality
+				newGenre = genre.split("&");
+				newChosenGenre = chosenGenre.split("&");
+
+				if (newGenre[0] === newChosenGenre[0]) {
+					include = true;
+				}
+			})
+
+			//if selected genre not in this object's genre list, skip writing object
+			//and continue to next loop iteration
+			if (!include) {
+				continue;
+			}
+
+			userFriendlyList += "<h3>" + setList["setList"][i]["title"] + 
+								"</h3>";
+			userFriendlyList += "Artist: " + setList["setList"][i]["artist"] + "<br/>";
+			genreStr = setList["setList"][i]["genre"].toString();
+			genreArr = genreStr.split(",");
+			userFriendlyList += "Genre: "
+
+			//list genres separated by a comma
+			for (j = 0; j < genreArr.length; j++) {
+				userFriendlyList += genreArr[j];
+				if (j < (genreArr.length - 1))
+				{
+					userFriendlyList += ", ";
+				}
+
+				if (genreOptions.indexOf(genreArr[j]) === -1)
+				{
+					genreOptions.push(genreArr[j]);
+				}
+			}
+			userFriendlyList += "<br/>";
+			userFriendlyList += "Released " + setList["setList"][i]["year-released"];
+		}
+		document.getElementById("user-friendly").innerHTML = userFriendlyList;
+        
+    	}, false);
+	}
+
+	</script>
+</head>
+
+
+<body onload="loadFile()">
+
+	<h1>Set List</h1>
+	<h2> Raw String: </h2>
+	<div id="raw-string">Loading...</div>
+	<br/>
+	Choose a Genre
+	<div id="dropdown">
+	&nbsp;
+	</div>
+	<br/>
+	<input type="button" value="Filter" id="submit-filter">
+	<div id="user-friendly">Loading...</div>
+</body>
+</html>
